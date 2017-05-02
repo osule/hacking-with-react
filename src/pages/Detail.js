@@ -1,6 +1,7 @@
 import React from 'react';
 import ajax from 'superagent';
 
+const baseURL = 'https://api.github.com/repos/facebook';
 class Detail extends React.Component {
 
   constructor(props) {
@@ -15,7 +16,7 @@ class Detail extends React.Component {
   }
 
   fetchFeed(type) {
-    ajax.get(`https://api.github.com/repos/facebook/react/${type}`)
+    ajax.get(`${baseURL}/${this.props.match.params.repo}/${type}`)
       .end((error, response) => {
         if (!error && response) {
           this.setState({ [type]: response.body });
