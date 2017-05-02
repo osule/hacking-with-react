@@ -1,11 +1,13 @@
 import React from 'react';
-import Detail from './pages/Detail';
 
 
 class App extends React.Component {
   render() {
     return (
-      <Detail />
+      <div>
+        <h1>Unofficial GitHub Browser v0.1</h1>
+        {this.props.children}
+      </div>
     );
   }
 }
