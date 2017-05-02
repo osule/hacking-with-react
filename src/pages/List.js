@@ -1,9 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 class List extends React.Component {
   render() {
     return (<div>
+      <p>You are here: <NavLink to="/" activeClassName="active">Home</NavLink></p>
       <p>This is the list page.</p>
       <ul>
         <li><Link to="/detail/react">React</Link></li>

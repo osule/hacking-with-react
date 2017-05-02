@@ -1,5 +1,6 @@
 import React from  'react';
 import ajax from 'superagent';
+import { NavLink } from 'react-router-dom';
 
 const baseURL = "https://api.github.com/users/";
 class User extends React.Component {
@@ -35,6 +36,7 @@ class User extends React.Component {
       let events = this.renderEvents();
       return (
         <div>
+          <p>You are here: <NavLink to="/" activeClassName="active">Home</NavLink> > {this.props.match.params.user}</p>
           {events}
         </div>
       );
