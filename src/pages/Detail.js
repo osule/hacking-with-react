@@ -7,7 +7,7 @@ class Detail extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { commits: [], pulls: [], forks: [] };
+    this.state = { commits: [], pulls: [], forks: [], mode: 'commits' };
   }
 
   componentWillMount() {
@@ -17,6 +17,8 @@ class Detail extends React.Component {
   }
 
   fetchFeed(type) {
+    if (this.props.match.params.repo === '') return; // empty repo name, bail out!
+        
     ajax.get(`${baseURL}/${this.props.match.params.repo}/${type}`)
       .end((error, response) => {
         if (!error && response) {
@@ -28,7 +30,7 @@ class Detail extends React.Component {
   }
 
   selectMode(event) {
-    this.setState({ mode: event.currentTarget.dataset.mode });
+    this.setState({ mode: event.currentTarget.getAttribute('data-mode') });
   }
 
   renderCommits() {
@@ -73,11 +75,11 @@ class Detail extends React.Component {
     }
     return (<div>
       <p>You are here: <NavLink to="/" activeClassName="active">Home</NavLink> > {this.props.match.params.repo}</p>
-      <button onClick={this.selectMode.bind(this)} data-mode="commits">Show Commits</button>
+      <button onClick={this.selectMode.bind(this)} data-mode="commits" ref="commits"> Show Commits</button>
 
-      <button onClick={this.selectMode.bind(this)} data-mode="forks">Show Forks</button>
+      <button onClick={this.selectMode.bind(this)} data-mode="forks" ref="forks">Show Forks</button>
 
-      <button onClick={this.selectMode.bind(this)} data-mode="pulls">Show Pulls</button>
+      <button onClick={this.selectMode.bind(this)} data-mode="pulls" ref="pulls">Show Pulls</button>
       {content}
     </div>);
   }

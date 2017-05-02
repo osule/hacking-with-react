@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 import createHistory from 'history/createHashHistory';
 
 import routes from './routes';
 
 ReactDOM.render(
-    <Router history={createHistory({ queryKey: false })}
+    <BrowserRouter history={createHistory({ queryKey: false })}
       onUpdate={() => window.scrollTo(0, 0)}>
       {routes}
-    </Router>,
+    </BrowserRouter>,
     document.getElementById('root')
 );
