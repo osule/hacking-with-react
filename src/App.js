@@ -1,5 +1,5 @@
 import React from 'react';
-
+import styles from './styles.css'; // eslint-disable-line
 
 class App extends React.Component {
   render() {
