@@ -9,7 +9,7 @@ import List from './pages/List';
 
 ReactDOM.render(
     <Router history={createHistory({ queryKey: false })}
-      onUpdate={() => window.scrollTo(0, 0)}>>
+      onUpdate={() => window.scrollTo(0, 0)}>
         <Switch>
           <Route exact path='/' component={ List } />
           <Route path="/detail/:repo" component={ Detail } />
