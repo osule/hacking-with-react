@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ajax from 'superagent';
 import { Link, NavLink } from 'react-router-dom';
 
@@ -11,6 +12,7 @@ class Detail extends React.Component {
   }
 
   componentWillMount() {
+    this.selectMode.bind(this);
     this.fetchFeed('commits');
     this.fetchFeed('forks');
     this.fetchFeed('pulls');
@@ -18,25 +20,31 @@ class Detail extends React.Component {
 
   fetchFeed(type) {
     if (this.props.match.params.repo === '') return; // empty repo name, bail out!
-        
+
     ajax.get(`${baseURL}/${this.props.match.params.repo}/${type}`)
       .end((error, response) => {
         if (!error && response) {
-          this.setState({ [type]: response.body });
+          this.saveFeed(type, response.body);
         } else {
-          console.log(`Error fetching ${type}`, error);
+          console.log(`Error fetching ${type}`, error); // eslint-disable-line no-console
         }
       });
   }
 
-  selectMode(event) {
-    this.setState({ mode: event.currentTarget.getAttribute('data-mode') });
+  saveFeed(type, contents) {
+    this.setState({ [type]: contents });
+  }
+
+  selectMode(mode) {
+    return (mode) => {
+      this.setState({ mode });
+    };
   }
 
   renderCommits() {
-    return this.state.commits.map((commit, index) => {
+    return this.state.commits.map((commit) => {
       const author = commit.author ? commit.author.login : 'Anonymous';
-      return (<p key={index}>
+      return (<p key={author.id} className="github">
         <Link to={`/user/${author}`}><strong>{author}</strong></Link>:
           <a href={commit.html_url}>{commit.commit.message}</a>.
       </p>);
@@ -44,9 +52,9 @@ class Detail extends React.Component {
   }
 
   renderForks() {
-    return this.state.forks.map((fork, index) => {
+    return this.state.forks.map((fork) => {
       const owner = fork.owner ? fork.owner.login : 'Anonymous';
-      return (<p key={index}>
+      return (<p key={owner.id} className="github">
         <Link to={`/user/${owner}`}><strong>{owner}</strong></Link>: forked to
           <a href={fork.html_url}>{fork.html_url}</a> at {fork.created_at}.
       </p>);
@@ -54,9 +62,9 @@ class Detail extends React.Component {
   }
 
   renderPulls() {
-    return this.state.pulls.map((pull, index) => {
+    return this.state.pulls.map((pull) => {
       const user = pull.user ? pull.user.login : 'Anonymous';
-      return (<p key={index}>
+      return (<p key={user.id} className="github">
         <Link to={`/user/${user}`}><strong>{user}</strong></Link>:
           <a href={pull.html_url}>{pull.body}</a>.
         </p>);
@@ -74,15 +82,31 @@ class Detail extends React.Component {
       content = this.renderPulls();
     }
     return (<div>
-      <p>You are here: <NavLink to="/" activeClassName="active">Home</NavLink> > {this.props.match.params.repo}</p>
-      <button onClick={this.selectMode.bind(this)} data-mode="commits" ref="commits"> Show Commits</button>
+      <p>You are here: <NavLink to="/" activeClassName="active">Home</NavLink> {'>'} {this.props.match.params.repo}</p>
+      <button onClick={this.selectMode('commits')} ref={() => 'commits'}> Show Commits</button>
 
-      <button onClick={this.selectMode.bind(this)} data-mode="forks" ref="forks">Show Forks</button>
+      <button onClick={this.selectMode('forks')} ref={() => 'forks'}>Show Forks</button>
 
-      <button onClick={this.selectMode.bind(this)} data-mode="pulls" ref="pulls">Show Pulls</button>
+      <button onClick={this.selectMode('pulls')} ref={() => 'pulls'}>Show Pulls</button>
       {content}
     </div>);
   }
 }
+
+Detail.defaultProps = {
+  match: {
+    params: {
+      repo: '',
+    },
+  },
+};
+
+Detail.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      repo: PropTypes.string,
+    }),
+  }),
+};
 
 export default Detail;

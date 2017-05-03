@@ -8,9 +8,9 @@ import User from './pages/User';
 
 const routes = (
   <App>
-    <Route exact path="/" component={ List } />
-    <Route path="/detail/:repo" component={ Detail } />
-    <Route path="/user/:user" component={ User } />
+    <Route exact path="/" component={List} />
+    <Route path="/detail/:repo" component={Detail} />
+    <Route path="/user/:user" component={User} />
   </App>
 );
 
